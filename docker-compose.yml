@@ -1,0 +1,40 @@
+version: "3.3"
+
+networks:
+  private:
+
+volumes:
+  mongodb:
+  client:
+
+services:
+  mongodb:
+    image: mongo
+    networks:
+      - "private"
+    volumes:
+      - mongodb:/var/lib/mongodb
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: kueski
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: kueskidb
+    restart: always
+
+  client:
+    image: node:latest
+    depends_on:
+      - "mongodb"
+    networks:
+      - "private"
+    ports:
+      - "4000:4000"
+    volumes:
+      - "./client:/opt/client"
+    environment:
+      COMMON_APPNAME: "Client App"
+      COMMON_SERVER_ADDRESS: "0.0.0.0:4000"
+      
+    command: "npm run serve:ssr"
+    restart: "unless-stopped"
