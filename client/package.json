@@ -11,6 +11,7 @@
     "dev:ssr": "ng run client:serve-ssr",
     "serve:ssr": "node dist/client/server/main.js",
     "build:ssr": "ng build --prod && ng run client:server:production",
+    "start:prod": "npm run build:ssr && npm run serve:ssr",
     "prerender": "ng run client:prerender"
   },
   "private": true,
@@ -27,6 +28,7 @@
     "@angular/platform-browser-dynamic": "~9.0.0",
     "@angular/platform-server": "~9.0.0",
     "@angular/router": "~9.0.0",
+    "@ngneat/transloco": "^1.1.1",
     "@nguniversal/express-engine": "^9.0.0",
     "express": "^4.15.2",
     "rxjs": "~6.5.4",

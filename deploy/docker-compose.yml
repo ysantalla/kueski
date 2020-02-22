@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:11.3
+    ports:
+      - 5455:5432
+    env_file:
+      - ../server/.env
+
+  redis:
+    image: redis:latest
+    ports:
+      - 6399:6379
+    command: redis-server

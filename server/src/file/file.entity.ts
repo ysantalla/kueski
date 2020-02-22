@@ -1,14 +1,21 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { BaseEntity } from 'src/commons/entity/base.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
-export class File {
-  @ObjectIdColumn()
-  ot: ObjectID;
+export class File extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column()
   name: string;
 
   @Column()
-  lastname: string;
+  path: string;
 
+  @Column()
+  mimetype: string;
+
+  @Column()
+  size: number;
 }

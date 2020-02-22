@@ -1,16 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
-import { CatsModule } from './cats/cats.module';
-import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOptions';
 import { FileModule } from './file/file.module';
-import { PhotoModule } from './photo/photo.module';
-import { Photo } from './photo/photo.entity';
+import { File } from './file/file.entity';
+
+// import { UsersModule } from './user/users.module';
+// import { User } from './user';
+
 
 @Module({
   imports: [
-    PhotoModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true
@@ -21,16 +22,20 @@ import { Photo } from './photo/photo.entity';
       useFactory: async (config: ConfigService) => {
 
         return {
-          type: "mongodb",          
-          database: config.get('MONGO_INITDB_DATABASE'),
-          entities: [Photo],
-          synchronize: false,
-          useUnifiedTopology: true,
+          type: "postgres",          
+          port: config.get('POSTGRES_PORT'),
+          username: config.get('POSTGRES_USERNAME'),
+          password: config.get('POSTGRES_PASSWORD'),
+          database: config.get('POSTGRES_DATABASE'),
+          entities: [File],
+          synchronize: true,
+          useUnifiedTopology: false,
           
-        } as MongoConnectionOptions;
+        } as PostgresConnectionOptions;
         
       },
-    })
+    }),
+    FileModule,
   ],
 })
 export class AppModule {}

@@ -24,7 +24,7 @@ async function bootstrap() {
     .setTitle('Kueski example')
     .setDescription('The kueski API description')
     .setVersion('1.0')
-    .addTag('kuski')
+    .addTag('kueski')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);

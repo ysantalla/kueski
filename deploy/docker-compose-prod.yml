@@ -1,0 +1,68 @@
+version: "3.3"
+
+networks:
+  private:
+
+volumes:
+  mongodb:
+  mariadb:
+  client:
+  server:
+
+services:
+  mariadb:
+    image: mariadb:latest
+    ports:
+      - 3306:3306
+    networks:
+      - "private"
+    volumes:
+      - mariadb:/var/lib/mariadb
+    env_file:
+      - ../server/.env
+    restart: "unless-stopped"
+  mongodb:
+    image: mongo
+    networks:
+      - "private"
+    volumes:
+      - mongodb:/var/lib/mongodb
+    ports:
+      - 27017:27017
+    env_file:
+      - ../server/.env
+    restart: always
+  server:
+    image: node:12.15.0-alpine
+    depends_on:
+      - "mariadb"
+    networks:
+      - "private"
+    ports:
+      - "3000:3000"
+    volumes:
+      - "../server/:/opt/server/"
+    environment:
+      COMMON_APPNAME: "Server App"
+      COMMON_SERVER_ADDRESS: "0.0.0.0:4000"
+    working_dir: 
+      "/opt/server"      
+    command: "npm run start:prod"
+    restart: "unless-stopped"
+  client:
+    image: node:12.15.0-alpine
+    depends_on:
+      - "server"
+    networks:
+      - "private"
+    ports:
+      - "4000:4000"
+    volumes:
+      - "../client/:/opt/client/"
+    environment:
+      COMMON_APPNAME: "Client App"
+      COMMON_SERVER_ADDRESS: "0.0.0.0:4000"
+    working_dir: 
+      "/opt/client"      
+    command: "npm run start:prod"
+    restart: "unless-stopped"
