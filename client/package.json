@@ -1,6 +1,8 @@
 {
-  "name": "client",
-  "version": "0.0.0",
+  "name": "Client",
+  "version": "1.0.0",
+  "description": "Starter repository",
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

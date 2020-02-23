@@ -4,8 +4,8 @@
 
 * Material Desing
 * Angular 9 (with Expressjs-nodejs to server side rendering)
-* Nestjs (with Expressjs-nodejs)
-* MariaDB + MongoDB
+* Nestjs (with Expressjs-nodejs and swagger)
+* MongoDB + redis for cache (data persistent)
 
 ### Server installation
 
@@ -21,7 +21,6 @@ Once the server application is running you can visit [http://localhost:3000/api]
 ### Running Server production mode
 
 $ npm run build && npm run start:prod
-
 
 ### Client installation
 

@@ -41,7 +41,7 @@ export class FileController {
   })
   async uploadFile(@UploadedFile() file: CreateFile): Promise<File> {
     
-    let entity: File = new File();
+    const entity: File = new File();
     entity.mimetype = file.mimetype;
     entity.name = file.filename;
     entity.size = file.size;
@@ -49,7 +49,7 @@ export class FileController {
     entity.createdAt = new Date();
     entity.updatedAt = new Date();
 
-    return await this.fileService.create(entity);
+    return await this.fileService.create(entity)
   }
 
   @Get('download/:filename')

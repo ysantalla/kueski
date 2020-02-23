@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
-import { FileModule } from './file/file.module';
 import { File } from './file/file.entity';
+import { FileModule } from './file/file.module';
 
-// import { UsersModule } from './user/users.module';
-// import { User } from './user';
+import { User } from './user/user.entity';
+import { UserModule } from './user/user.module';
 
 
 @Module({
@@ -22,20 +23,28 @@ import { File } from './file/file.entity';
       useFactory: async (config: ConfigService) => {
 
         return {
-          type: "postgres",          
+          type: "postgres",
+          host: config.get('POSTGRES_HOST'),
           port: config.get('POSTGRES_PORT'),
           username: config.get('POSTGRES_USERNAME'),
           password: config.get('POSTGRES_PASSWORD'),
           database: config.get('POSTGRES_DATABASE'),
-          entities: [File],
+          entities: [File, User],
           synchronize: true,
-          useUnifiedTopology: false,
-          
+          useUnifiedTopology: true,
+          cache: {
+            type: 'redis',
+            options: {
+              host: config.get('REDIS_HOST'),
+              port: config.get('REDIS_PORT'),
+            },
+          },
         } as PostgresConnectionOptions;
         
       },
     }),
     FileModule,
+    UserModule
   ],
 })
 export class AppModule {}

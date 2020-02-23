@@ -1,15 +1,60 @@
-version: '3'
+version: "3.3"
+
+networks:
+  private:
+   ipam:
+      config:
+      - subnet: 172.16.238.0/24
+
+volumes:
+  postgres:
+  client:
+  server:
 
 services:
+  redis:
+    image: redis:latest
+    networks:
+      - private
+    ports:
+      - 6399:6379
+    command: redis-server
   postgres:
+    # TypeORM fails with Postgres v.12
     image: postgres:11.3
     ports:
       - 5455:5432
     env_file:
       - ../server/.env
-
-  redis:
-    image: redis:latest
+    networks:
+      - private
+  server:
+    image: node:12.15.0-alpine
+    depends_on:
+      - "postgres"
+    networks:
+      - "private"
     ports:
-      - 6399:6379
-    command: redis-server
+      - "3000:3000"
+    volumes:
+      - "../server/:/opt/server/"
+    env_file:
+      - ../server/.env
+    working_dir: 
+      "/opt/server"      
+    command: "npm run start:prod"
+    restart: "unless-stopped"
+  client:
+    image: node:12.15.0-alpine
+    depends_on:
+      - "server"
+    networks:
+      - "private"
+    ports:
+      - "4000:4000"
+    volumes:
+      - "../client/:/opt/client/"
+    working_dir: 
+      "/opt/client"      
+    command: "npm run start:prod"
+    restart: "unless-stopped"
