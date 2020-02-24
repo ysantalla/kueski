@@ -1,13 +1,17 @@
-import { createWriteStream, unlinkSync, lstatSync } from 'fs';
+import { unlinkSync } from 'fs';
 import * as path from 'path';
 
-import { Controller, Get, Post, UseInterceptors, UploadedFile, Param, Res, Put, Delete } from '@nestjs/common';
+import { Controller, Get, Post, UseInterceptors, UploadedFile, Param, Res, Delete, UseGuards } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiConsumes, ApiBody, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+
 import { FileService } from './file.service';
 import { File } from './file.entity';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiConsumes, ApiBody } from '@nestjs/swagger';
+
 import { storageOptions } from './file.common';
 import { FileUploadDto } from './dto/file.dto';
+import { Roles } from 'src/commons/decorators/roles.decorator';
+import { RolesGuard } from 'src/commons/guards/roles.guard';
 
 
 interface CreateFile {
@@ -19,6 +23,8 @@ interface CreateFile {
   size: number;
 }
 
+@ApiTags('file')
+@ApiBearerAuth()
 @Controller('file')
 export class FileController {
   constructor(
@@ -58,6 +64,8 @@ export class FileController {
   }
 
   @Delete(':filename')
+  @Roles('user')
+  @UseGuards(RolesGuard)
   async deleteFile(@Param('filename') filename: string ): Promise<string> {
     const rootPath = path.join('.');
     return new Promise((resolve, reject) => {

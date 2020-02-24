@@ -1,42 +1,44 @@
 import {
-  Entity,
-  Column,
-} from 'typeorm';
-
-import {
   IsString,
   MaxLength,
-  IsEmail,
-  IsBoolean,
 } from 'class-validator';
 
 import { Exclude } from 'class-transformer';
 import { BaseEntity } from 'src/commons/entity/base.entity';
 
+import { Column, Entity } from 'typeorm';
 
-@Entity('users')
+
+export enum Role {
+  ADMIN = 'admin',
+  USER = 'user',
+}
+
+@Entity()
 export class User extends BaseEntity {
+  constructor() {
+    super();   
+  }
+
+  @IsString({ always: true })
+  @Column({ nullable: true })
+  @Column() public firstname: string;
+
+  @IsString({ always: true })
+  @Column({ nullable: true })
+  @Column() public lastname: string;
+
   @IsString({ always: true })
   @MaxLength(255, { always: true })
-  @IsEmail()
   @Column({ type: 'varchar', length: 255, nullable: false, unique: true })
-  email: string;
-
-  @IsBoolean({ always: true })
-  @Column({ type: 'boolean', default: true })
-  isActive: boolean;
-
-  @IsString({ always: true })
-  @Column({ nullable: true })
-  firstname: string;
-
-  @IsString({ always: true })
-  @Column({ nullable: true })
-  lastname: string;
+  @Column() public email: string;
 
   @IsString({ always: true })
   @MaxLength(255, { always: true })
   @Column({ type: 'varchar', length: 255, nullable: false, })
   @Exclude()
-  password: string;
+  public password: string;
+
+  @Column() public role: Role;
+
 }

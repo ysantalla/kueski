@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 
 import * as helmet from 'helmet';
 import * as rateLimit from 'express-rate-limit';
+import { ValidationPipe } from '@nestjs/common';
 
 
 async function bootstrap() {
@@ -29,6 +30,10 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
+
+  app.useGlobalPipes(
+    new ValidationPipe()
+  );  
 
   app.enableCors();
 

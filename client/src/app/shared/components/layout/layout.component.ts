@@ -20,7 +20,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class LayoutComponent implements OnInit {
 
   isLoggedIn$: Observable<boolean>;
-  username$: Observable<string>;
+  email$: Observable<string>;
 
   envName = env.envName;
   appName = env.appName;
@@ -41,7 +41,7 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoggedIn$ = this.authService.isAuthenticated();
-    this.username$ = this.authService.getUsername();
+    this.email$ = this.authService.getEmail();
   }
 
   logout(): void {

@@ -5,8 +5,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 
 const TOKEN_PREFIX = 'TOKEN';
-const LANGUAGE_PREFIX = 'LANGUAGE';
-
 
 @Injectable({
   providedIn: 'root'
@@ -16,39 +14,26 @@ export class AuthService {
   private isAuthenticated$ = new BehaviorSubject(false);
   private download$ = new BehaviorSubject(null);
   private token$ = new BehaviorSubject('');
-  private username$ = new BehaviorSubject('');
-
-  private language$ = new BehaviorSubject('es');
+  private email$ = new BehaviorSubject('');
 
   constructor(
     private localStorageService: LocalStorageService
   ) {
-    const lang = this.localStorageService.getItem(LANGUAGE_PREFIX);
 
-    if (lang) {
-      this.language$.next(lang);
-    }
+    this.token$.subscribe(data => {
+      if (!this.isTokenExpired(data)) {
+        const tokenDecoded = this.decodeToken(data);
 
-    this.language$.subscribe(language => {
-      this.localStorageService.setItem(LANGUAGE_PREFIX, language);
+        this.isAuthenticated$.next(true);
+        this.email$.next(tokenDecoded.email);
+      }
     });
 
+    this.token$.next(this.localStorageService.getItem(TOKEN_PREFIX));
   }
 
-  public getLanguageAsync(): Observable<string> {
-    return this.language$.asObservable();
-  }
-
-  public getLanguage(): string {
-    return this.language$.value;
-  }
-
-  public setLanguage(language: string): void {
-    return this.language$.next(language);
-  }
-
-  public getUsername(): Observable<string> {
-    return this.username$.asObservable();
+  public getEmail(): Observable<string> {
+    return this.email$.asObservable();
   }
 
   public getToken(): string {
@@ -64,14 +49,18 @@ export class AuthService {
   }
 
   public login(token: string): any {
+    this.localStorageService.setItem(TOKEN_PREFIX, token);
+    this.token$.next(token);
 
+    const tokenDecoded = this.decodeToken(token);
+    this.isAuthenticated$.next(true);
+    this.email$.next(tokenDecoded.email);
   }
 
   public logout(): void {
     this.localStorageService.removeItem(TOKEN_PREFIX);
     this.isAuthenticated$.next(false);
-    this.username$.next('');
-    this.download$.next(null);
+    this.email$.next('');
   }
 
   private urlBase64Decode(str: string): string {

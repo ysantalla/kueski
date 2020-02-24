@@ -10,6 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LayoutComponent } from './components/layout/layout.component';
@@ -33,7 +34,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     RouterModule,
     MatInputModule,
     MatProgressBarModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatMenuModule
 
   ],
   exports: [
@@ -48,7 +50,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatCardModule,
     MatInputModule,
     MatProgressBarModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatMenuModule
   ]
 })
 export class SharedModule {

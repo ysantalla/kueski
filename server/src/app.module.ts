@@ -4,6 +4,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
+import { CommonModule } from './commons/common.module';
+
 import { File } from './file/file.entity';
 import { FileModule } from './file/file.module';
 
@@ -43,10 +45,9 @@ import { UserModule } from './user/user.module';
         
       },
     }),
+    CommonModule,
     FileModule,
     UserModule
   ],
 })
 export class AppModule {}
-
-
