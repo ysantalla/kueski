@@ -25,7 +25,7 @@ services:
     ports:
       - 5455:5432
     env_file:
-      - ../server/.env
+      - ../server/.env_prod
     networks:
       - private
   server:
@@ -39,7 +39,7 @@ services:
     volumes:
       - "../server/:/opt/server/"
     env_file:
-      - ../server/.env
+      - ../server/.env_prod
     working_dir: 
       "/opt/server"      
     command: "npm run start:prod"
