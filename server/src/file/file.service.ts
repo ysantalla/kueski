@@ -1,20 +1,25 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { File } from './file.entity';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { File } from './interfaces/file.interface';
 
 @Injectable()
 export class FileService {
-  constructor(
-    @InjectRepository(File)
-    private readonly fileRepository: Repository<File>,
-  ) {}
+    constructor(
+        @InjectModel('File') private readonly fileModel: Model<File>)
+    {}
 
-  async findAll(): Promise<File[]> {
-    return await this.fileRepository.find();
-  }
+    async create(createFile: File): Promise<File> {
+        const model = new this.fileModel(createFile);
+        return model.save();
+    }
 
-  async create(file: File): Promise<File> {
-    return await this.fileRepository.save(file);
-  }
+    async getFileById(id: string): Promise<File> {
+        return this.fileModel.findById(id)
+            .then((file) => file)
+            .catch((err) => {
+                throw err;                
+            });
+    }
+    
 }
