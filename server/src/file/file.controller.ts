@@ -43,9 +43,9 @@ export class FileController {
       const file = await this.fileService.getFileById(id);
       const filePath = path.join('.', file.path);
       if (fs.existsSync(filePath)) {
-          res.header('Content-disposition', 'attachament; filename=' + file.filename);
           res.header('Content-type', file.mimetype);
-          res.download(filePath, file.filename);
+          res.header('Content-disposition', `attachament; filename=${file.originalname}`);
+          res.download(filePath, file.originalname);
       } else {
         res.sendStatus(HttpStatus.NOT_FOUND);
       }
